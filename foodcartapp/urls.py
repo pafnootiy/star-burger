@@ -10,3 +10,4 @@ urlpatterns = [
     path('banners/', banners_list_api),
     path('order/', register_order),
 ]
+# path('order/<int:pk>/', views.register_order, name='register_order')
