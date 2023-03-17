@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.templatetags.static import static
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-
+from rest_framework import status
 # # foodcartapp
 # from foodcartapp.models import Product, Order, OrderDetails
 from .models import Product, Order, OrderDetails
@@ -67,21 +67,38 @@ def product_list_api(request):
 def register_order(request):
     ''' Регистрирую заказ от покупателя '''
 
-    customer = Order.objects.create(
-        firstname=request.data['firstname'],
-        lastname=request.data['lastname'],
-        phonenumber=request.data['phonenumber'],
-        address=request.data['address'],
-    )
+    try:
+        if request.data['products'] is None:
+            content = {'error': 'products: this field cannot be empty'}
+            return Response(content, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-    for item in request.data['products']:
+        if request.data['products'] == []:
+            content = {'error': 'products: this list cannot be empty'}
+            return Response(content, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-        product = Product.objects.get(id=item['product'])
-        OrderDetails.objects.create(
-            order=customer,
-            product=product,
-            quantity=item['quantity'],
+        else:
+            customer = Order.objects.create(
+                firstname=request.data['firstname'],
+                lastname=request.data['lastname'],
+                phonenumber=request.data['phonenumber'],
+                address=request.data['address'],
+            )
 
-        )
+            for item in request.data['products']:
 
-    return Response(request.data)
+                product = Product.objects.get(id=item['product'])
+                OrderDetails.objects.create(
+                    order=customer,
+                    product=product,
+                    quantity=item['quantity'],
+
+                )
+
+            return Response(request.data)
+
+    except TypeError:
+        content = {'error': 'products is not a list, it is str'}
+        return Response(content, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    except KeyError:
+        content = {'error': 'products: required field'}
+        return Response(content, status=status.HTTP_405_METHOD_NOT_ALLOWED)
