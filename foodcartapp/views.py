@@ -67,13 +67,19 @@ def product_list_api(request):
 def register_order(request):
     ''' Регистрирую заказ от покупателя '''
 
-    try:
-        if request.data['products'] is None:
+    try: # доработать тесты на ошибки 
+        if request.data['products'] or request.data['firstname'] or request.data['lastname'] or request.data['phonenumber'] or request.data['address'] is None:
             content = {'error': 'products: this field cannot be empty'}
             return Response(content, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
         if request.data['products'] == []:
             content = {'error': 'products: this list cannot be empty'}
+            return Response(content, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        if request.data['products'] > 100:
+            content = {'error': 'invalid primary key'}
+            return Response(content, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        if request.data['firstname'] == []:
+            content = {'error': 'firstname: Not a valid string'}
             return Response(content, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
         else:
