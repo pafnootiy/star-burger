@@ -1,9 +1,11 @@
 import json
 from django.http import JsonResponse
 from django.templatetags.static import static
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
-# foodcartapp
-from foodcartapp.models import Product, Order, OrderDetails
+# # foodcartapp
+# from foodcartapp.models import Product, Order, OrderDetails
 from .models import Product, Order, OrderDetails
 
 
@@ -53,25 +55,26 @@ def product_list_api(request):
             }
         }
         dumped_products.append(dumped_product)
+
+    print(dumped_products)
     return JsonResponse(dumped_products, safe=False, json_dumps_params={
         'ensure_ascii': False,
         'indent': 4,
     })
 
 
+@api_view(['POST'])
 def register_order(request):
     ''' Регистрирую заказ от покупателя '''
 
-    data = json.loads(request.body.decode())
-
     customer = Order.objects.create(
-        firstname=data['firstname'],
-        lastname=data['lastname'],
-        phonenumber=data['phonenumber'],
-        address=data['address'],
+        firstname=request.data['firstname'],
+        lastname=request.data['lastname'],
+        phonenumber=request.data['phonenumber'],
+        address=request.data['address'],
     )
 
-    for item in data['products']:
+    for item in request.data['products']:
 
         product = Product.objects.get(id=item['product'])
         OrderDetails.objects.create(
@@ -81,4 +84,4 @@ def register_order(request):
 
         )
 
-    return JsonResponse({})
+    return Response(request.data)
