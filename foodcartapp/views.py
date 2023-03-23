@@ -4,8 +4,14 @@ from django.templatetags.static import static
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-# # foodcartapp
-# from foodcartapp.models import Product, Order, OrderDetails
+
+from rest_framework.serializers import ValidationError
+from rest_framework.serializers import Serializer
+from rest_framework.serializers import CharField
+from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ListField
+# foodcartapp
+from foodcartapp.models import Product, Order, OrderDetails
 from .models import Product, Order, OrderDetails
 
 
@@ -63,48 +69,41 @@ def product_list_api(request):
     })
 
 
+class OrderDetailsSerializer(ModelSerializer):
+    class Meta:
+        model = OrderDetails
+        fields = ['product', 'quantity']
+
+
+class OrderSerializer(ModelSerializer):
+    products = OrderDetailsSerializer(
+        many=True, allow_empty=False)
+
+    class Meta:
+        model = Order
+        fields = ['products', 'firstname', 'lastname',
+                  'phonenumber', 'address']
+
+
 @api_view(['POST'])
 def register_order(request):
     ''' Регистрирую заказ от покупателя '''
 
-    try: # доработать тесты на ошибки 
-        if request.data['products'] or request.data['firstname'] or request.data['lastname'] or request.data['phonenumber'] or request.data['address'] is None:
-            content = {'error': 'products: this field cannot be empty'}
-            return Response(content, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    serializer = OrderSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
 
-        if request.data['products'] == []:
-            content = {'error': 'products: this list cannot be empty'}
-            return Response(content, status=status.HTTP_405_METHOD_NOT_ALLOWED)
-        if request.data['products'] > 100:
-            content = {'error': 'invalid primary key'}
-            return Response(content, status=status.HTTP_405_METHOD_NOT_ALLOWED)
-        if request.data['firstname'] == []:
-            content = {'error': 'firstname: Not a valid string'}
-            return Response(content, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    customer = Order.objects.create(
+        firstname=serializer.validated_data['firstname'],
+        lastname=serializer.validated_data['lastname'],
+        phonenumber=serializer.validated_data['phonenumber'],
+        address=serializer.validated_data['address'],)
 
-        else:
-            customer = Order.objects.create(
-                firstname=request.data['firstname'],
-                lastname=request.data['lastname'],
-                phonenumber=request.data['phonenumber'],
-                address=request.data['address'],
-            )
+    for item in request.data['products']:
+        product = Product.objects.get(id=item['product'])
+        OrderDetails.objects.create(
+            order=customer,
+            product=product,
+            quantity=item['quantity'])
 
-            for item in request.data['products']:
+    return Response(request.data)  # привильно ли отправляется сериализация 
 
-                product = Product.objects.get(id=item['product'])
-                OrderDetails.objects.create(
-                    order=customer,
-                    product=product,
-                    quantity=item['quantity'],
-
-                )
-
-            return Response(request.data)
-
-    except TypeError:
-        content = {'error': 'products is not a list, it is str'}
-        return Response(content, status=status.HTTP_405_METHOD_NOT_ALLOWED)
-    except KeyError:
-        content = {'error': 'products: required field'}
-        return Response(content, status=status.HTTP_405_METHOD_NOT_ALLOWED)
