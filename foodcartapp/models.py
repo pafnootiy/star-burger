@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator
 from phonenumber_field.modelfields import PhoneNumberField
+from django.db.models import Sum, F
 
 
 class Restaurant(models.Model):
@@ -125,11 +126,26 @@ class RestaurantMenuItem(models.Model):
         return f"{self.restaurant.name} - {self.product.name}"
 
 
+class OrderQuerySet(models.QuerySet):
+    def count_price(self):
+        total_price = self.annotate(amount=Sum(
+            F('orders__quantity') * F('orders__product_price')))
+        
+        # # print("что у меня в тотал orders__quantity", self.orders__quantity)
+        # print("что у меня в тотал total_price", total_price)
+        # > q[0].number_of_entries
+        return total_price
+
+
 class Order(models.Model):
     firstname = models.CharField('Имя', max_length=50)
     lastname = models.CharField('Фамилия', max_length=50, blank=True)
     phonenumber = PhoneNumberField('Телефон', region="RU")
     address = models.CharField('Адрес', max_length=250)
+
+    objects = OrderQuerySet.as_manager()
+
+    # print("что у меня в objects", objects)
 
     class Meta:
         verbose_name = 'Заказ'
@@ -152,7 +168,13 @@ class OrderDetails(models.Model):
         related_name='selected_products',
         verbose_name="Товар"
     )
-    quantity = models.IntegerField(verbose_name="Количество")
+    quantity = models.PositiveIntegerField(verbose_name="Количество")
+    product_price = models.DecimalField(
+        verbose_name='цена товара',
+        max_digits=8,
+        decimal_places=2
+    )
+    print("чтоу меня в product_price", product_price)
 
     class Meta:
         verbose_name = 'элемент заказа'

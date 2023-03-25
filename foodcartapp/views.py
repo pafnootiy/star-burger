@@ -62,7 +62,7 @@ def product_list_api(request):
         }
         dumped_products.append(dumped_product)
 
-    print(dumped_products)
+    # print(dumped_products)
     return JsonResponse(dumped_products, safe=False, json_dumps_params={
         'ensure_ascii': False,
         'indent': 4,
@@ -103,6 +103,9 @@ def register_order(request):
         OrderDetails.objects.create(
             order=customer,
             product=product,
-            quantity=item['quantity'])
+            quantity=item['quantity'],
+            product_price=product.price
+
+        )
 
     return Response(request.data)  # привильно ли отправляется сериализация
