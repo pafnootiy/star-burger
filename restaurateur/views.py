@@ -94,10 +94,10 @@ def view_restaurants(request):
 
 @user_passes_test(is_manager, login_url='restaurateur:login')
 def view_orders(request):
-    total_price = Order.objects.count_price()
+    # total_price = Order.objects.count_price()
 
 
     return render(request, template_name='order_items.html', context={
         'order_items': Order.objects.count_price().order_by('-id'),
-        'price': total_price
+        # 'price': total_price
     })

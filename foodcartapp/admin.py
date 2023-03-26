@@ -126,12 +126,7 @@ class OrderAdmin(admin.ModelAdmin):
         'phonenumber',
         'address',
     ]
-    # list_display_links = [
-    #     'name',
-    #     # 'lastname',
-    #     # 'address',
-
-    # ]
+ 
     inlines = [
         OrderDetailsInline
     ]

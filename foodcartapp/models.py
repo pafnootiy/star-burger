@@ -2,6 +2,7 @@ from django.db import models
 from django.core.validators import MinValueValidator
 from phonenumber_field.modelfields import PhoneNumberField
 from django.db.models import Sum, F
+from django.core.exceptions import ValidationError
 
 
 class Restaurant(models.Model):
@@ -130,10 +131,6 @@ class OrderQuerySet(models.QuerySet):
     def count_price(self):
         total_price = self.annotate(amount=Sum(
             F('orders__quantity') * F('orders__product_price')))
-        
-        # # print("что у меня в тотал orders__quantity", self.orders__quantity)
-        # print("что у меня в тотал total_price", total_price)
-        # > q[0].number_of_entries
         return total_price
 
 
@@ -145,14 +142,18 @@ class Order(models.Model):
 
     objects = OrderQuerySet.as_manager()
 
-    # print("что у меня в objects", objects)
-
     class Meta:
         verbose_name = 'Заказ'
         verbose_name_plural = 'Заказы'
 
     def __str__(self) -> str:
         return f"{self.firstname} {self.lastname} , {self.address}"
+
+
+# допилисть сериализатор который будет запрещать менять стоимость в форме
+def validate_even(value):
+    if value != value:
+        value.clean()
 
 
 class OrderDetails(models.Model):
@@ -172,7 +173,8 @@ class OrderDetails(models.Model):
     product_price = models.DecimalField(
         verbose_name='цена товара',
         max_digits=8,
-        decimal_places=2
+        decimal_places=2,
+        validators=[MinValueValidator(0), validate_even]
     )
     print("чтоу меня в product_price", product_price)
 
