@@ -18,15 +18,21 @@
       <th>Клиент</th>
       <th>Телефон</th>
       <th>Адрес доставки</th>
+      <th>Ссылка на админку</th>
     </tr>
-
+ 
     {% for item in order_items %}
       <tr>
+ 
+
+
         <td>{{item.id}}</td>
         <td>{{item.amount}}</td>
         <td>{{item.firstname}} {{item.lastname}}</td>
         <td>{{item.phonenumber}}</td>
         <td>{{item.address}}</td>
+        <!-- <td><a href={{"http://127.0.0.1:8000/admin/foodcartapp/order/"}}>Редактировать</a></td> -->
+        <td><a href={% url 'admin:foodcartapp_order_change' object_id=item.id %}>Редактировать</a></td>
       </tr>
     {% endfor %}
    </table>

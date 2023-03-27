@@ -4,7 +4,7 @@ from django.templatetags.static import static
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-
+from django.db import IntegrityError, transaction
 from rest_framework.serializers import ValidationError
 from rest_framework.serializers import Serializer
 from rest_framework.serializers import CharField
@@ -85,6 +85,7 @@ class OrderSerializer(ModelSerializer):
                   'phonenumber', 'address']
 
 
+@transaction.atomic
 @api_view(['POST'])
 def register_order(request):
     ''' Регистрирую заказ от покупателя '''
@@ -92,20 +93,23 @@ def register_order(request):
     serializer = OrderSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
 
-    customer = Order.objects.create(
-        firstname=serializer.validated_data['firstname'],
-        lastname=serializer.validated_data['lastname'],
-        phonenumber=serializer.validated_data['phonenumber'],
-        address=serializer.validated_data['address'],)
+    try:
+        customer = Order.objects.create(
+            firstname=serializer.validated_data['firstname'],
+            lastname=serializer.validated_data['lastname'],
+            phonenumber=serializer.validated_data['phonenumber'],
+            address=serializer.validated_data['address'],)
 
-    for item in request.data['products']:
-        product = Product.objects.get(id=item['product'])
-        OrderDetails.objects.create(
-            order=customer,
-            product=product,
-            quantity=item['quantity'],
-            product_price=product.price
+        for item in request.data['products']:
+            product = Product.objects.get(id=item['product'])
+            OrderDetails.objects.create(
+                order=customer,
+                product=product,
+                quantity=item['quantity'],
+                product_price=product.price
 
-        )
+            )
 
+    except TypeError:
+        raise
     return Response(request.data)  # привильно ли отправляется сериализация

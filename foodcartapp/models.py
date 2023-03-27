@@ -176,7 +176,7 @@ class OrderDetails(models.Model):
         decimal_places=2,
         validators=[MinValueValidator(0), validate_even]
     )
-    print("чтоу меня в product_price", product_price)
+    # print("чтоу меня в product_price", product_price)
 
     class Meta:
         verbose_name = 'элемент заказа'
