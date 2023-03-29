@@ -135,6 +135,23 @@ class OrderQuerySet(models.QuerySet):
 
 
 class Order(models.Model):
+
+    UNPROCESSED = 'unprocessed'
+    RECIVE = 'RE'
+    PREPARING = 'PR'
+    DELIVERY = 'DE'
+    DONE = 'DO'
+    STATUS = [
+        (UNPROCESSED, 'Необработано'),
+        (RECIVE, 'Получено'),
+        (PREPARING, 'Подготовка'),
+        (DELIVERY, 'Доставка'),
+        (DONE, 'Выполнено'),
+    ]
+
+    status = models.CharField('Статус', max_length=20,
+                              default=UNPROCESSED, choices=STATUS)# допилить выбор статуса и отображение только необработанных 
+
     firstname = models.CharField('Имя', max_length=50)
     lastname = models.CharField('Фамилия', max_length=50, blank=True)
     phonenumber = PhoneNumberField('Телефон', region="RU")
@@ -157,6 +174,7 @@ def validate_even(value):
 
 
 class OrderDetails(models.Model):
+
     order = models.ForeignKey(
         Order,
         on_delete=models.CASCADE,

@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.http import HttpResponseRedirect
 from django.shortcuts import reverse
 from django.templatetags.static import static
 from django.utils.html import format_html
@@ -115,16 +116,27 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(OrderDetails)
 class OrderDetailsAdmin(admin.ModelAdmin):
+    # list_display = [
+    #     'status',
+    # ]
     pass
 
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
+    def response_change(self, request, obj):
+        res = super(OrderAdmin, self).response_change(request, obj)
+        if "next" in request.GET:
+            return HttpResponseRedirect(request.GET['next'])      # допилить с url_has_allowed_host_and_scheme
+        else:
+            return res
+
     list_display = [
         'firstname',
         'lastname',
         'phonenumber',
         'address',
+ 
     ]
  
     inlines = [
