@@ -150,12 +150,13 @@ class Order(models.Model):
     ]
 
     status = models.CharField('Статус', max_length=20,
-                              default=UNPROCESSED, choices=STATUS)# допилить выбор статуса и отображение только необработанных 
+                              default=UNPROCESSED, choices=STATUS)  # допилить выбор статуса и отображение только необработанных
 
     firstname = models.CharField('Имя', max_length=50)
     lastname = models.CharField('Фамилия', max_length=50, blank=True)
     phonenumber = PhoneNumberField('Телефон', region="RU")
     address = models.CharField('Адрес', max_length=250)
+    comment = models.TextField('Комментарий', blank=True)
 
     objects = OrderQuerySet.as_manager()
 
@@ -194,7 +195,6 @@ class OrderDetails(models.Model):
         decimal_places=2,
         validators=[MinValueValidator(0), validate_even]
     )
-    # print("чтоу меня в product_price", product_price)
 
     class Meta:
         verbose_name = 'элемент заказа'
