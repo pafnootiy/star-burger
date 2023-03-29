@@ -149,12 +149,22 @@ class Order(models.Model):
         (DELIVERY, 'Доставка'),
         (DONE, 'Выполнено'),
     ]
+    CASH = 'CASH'
+    CARD = 'CARD'
+
+    PAYMENT = [
+        (CASH, 'Наличные'),
+        (CARD, 'Безнал')
+
+    ]
 
     registered_at = models.DateTimeField(
         'Зарегистрировано', default=timezone.now, null=True)
     called_at = models.DateTimeField('Подтверждено', null=True, blank=True)
     delivered_at = models.DateTimeField('Доставлено', null=True, blank=True)
 
+    payment = models.CharField('Cпособ оплаты', max_length=20,
+                               default=CASH, choices=PAYMENT)  # допилить выбор статуса и отображение только необработанных
     status = models.CharField('Статус', max_length=20,
                               default=UNPROCESSED, choices=STATUS)  # допилить выбор статуса и отображение только необработанных
 
