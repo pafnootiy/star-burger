@@ -3,6 +3,7 @@ from django.core.validators import MinValueValidator
 from phonenumber_field.modelfields import PhoneNumberField
 from django.db.models import Sum, F
 from django.core.exceptions import ValidationError
+from django.utils import timezone
 
 
 class Restaurant(models.Model):
@@ -148,6 +149,11 @@ class Order(models.Model):
         (DELIVERY, 'Доставка'),
         (DONE, 'Выполнено'),
     ]
+
+    registered_at = models.DateTimeField(
+        'Зарегистрировано', default=timezone.now, null=True)
+    called_at = models.DateTimeField('Подтверждено', null=True, blank=True)
+    delivered_at = models.DateTimeField('Доставлено', null=True, blank=True)
 
     status = models.CharField('Статус', max_length=20,
                               default=UNPROCESSED, choices=STATUS)  # допилить выбор статуса и отображение только необработанных
