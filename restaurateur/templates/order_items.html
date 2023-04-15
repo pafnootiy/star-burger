@@ -3,15 +3,15 @@
 {% block title %}Необработанные заказы | Star Burger{% endblock %}
 
 {% block content %}
-  <center>
-    <h2>Необработанные заказы</h2>
-  </center>
+<center>
+  <h2>Необработанные заказы</h2>
+</center>
 
-  <hr/>
-  <br/>
-  <br/>
-  <div class="container">
-   <table class="table table-responsive">
+<hr />
+<br />
+<br />
+<div class="container">
+  <table class="table table-responsive">
     <tr>
       <th>ID заказа</th>
       <th>Статус</th>
@@ -21,23 +21,38 @@
       <th>Телефон</th>
       <th>Адрес доставки</th>
       <th>Ссылка на админку</th>
+      <th>Комментарий</th>
+      <th>Ресторан</th>
     </tr>
- 
-    {% for item in order_items %}
-      <tr>
-        <td>{{item.id}}</td>
-        <td>{{item.get_status_display}}</td> 
-        <td>{{item.amount}}</td>
-        <td>{{item.get_payment_display}}</td>
-        <td>{{item.firstname}} {{item.lastname}}</td>
-        <td>{{item.phonenumber}}</td>
-        <td>{{item.address}}</td>
-        <td><a href={% url 'admin:foodcartapp_order_change' object_id=item.id %}?next={{request.path}}>Редактировать</a></td>
-      </tr>
 
-      {{request.OrderDetails.status}}
+    {% for item in order_items %}
+    <tr>
+      <td>{{item.id}}</td>
+      <td>{{item.status}}</td>
+      <td>{{item.amount}}</td>
+      <td>{{item.payment}}</td>
+      <td>{{item.firstname}} {{item.lastname}}</td>
+      <td>{{item.phonenumber}}</td>
+      <td>{{item.address}}</td>
+      <!-- допилить безопасную ссылку с next -->
+      <td><a href={% url 'admin:foodcartapp_order_change' object_id=item.id %}?next={{request.path}}>Редактировать</a>
+      </td>
+      <td>{{item.comment}}</td>
+
+      <td><details>
+        <summary>Может быть приготовлен ресторанами:</summary>
+  
+        {% for restaurant in item.restaurants %}
+           {{restaurant }}
+        {% endfor %}
+      </details></td>
+
+    </tr>
+
+
     {% endfor %}
-   </table>
-  </div>
-{% endblock %}
  
+
+  </table>
+</div>
+{% endblock %}

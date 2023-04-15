@@ -163,10 +163,12 @@ class Order(models.Model):
     called_at = models.DateTimeField('Подтверждено', null=True, blank=True)
     delivered_at = models.DateTimeField('Доставлено', null=True, blank=True)
 
+    restaurant = models.ForeignKey(Restaurant,on_delete=models.CASCADE,related_name='restaurants',verbose_name='Ресторан',null=True,blank=True)
+
     payment = models.CharField('Cпособ оплаты', max_length=20,
-                               default=CASH, choices=PAYMENT)  # допилить выбор статуса и отображение только необработанных
+                               default=CASH, choices=PAYMENT)   
     status = models.CharField('Статус', max_length=20,
-                              default=UNPROCESSED, choices=STATUS)  # допилить выбор статуса и отображение только необработанных
+                              default=UNPROCESSED, choices=STATUS)   
 
     firstname = models.CharField('Имя', max_length=50)
     lastname = models.CharField('Фамилия', max_length=50, blank=True)
@@ -179,6 +181,7 @@ class Order(models.Model):
     class Meta:
         verbose_name = 'Заказ'
         verbose_name_plural = 'Заказы'
+        ordering = ['-id']
 
     def __str__(self) -> str:
         return f"{self.firstname} {self.lastname} , {self.address}"
@@ -218,3 +221,6 @@ class OrderDetails(models.Model):
 
     def __str__(self) -> str:
         return f"{self.order} "
+    
+
+    

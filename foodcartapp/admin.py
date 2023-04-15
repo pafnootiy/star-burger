@@ -14,6 +14,7 @@ from .models import OrderDetails
 
 class RestaurantMenuItemInline(admin.TabularInline):
     model = RestaurantMenuItem
+    # model = OrderDetails
     extra = 0
 
 
@@ -116,9 +117,6 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(OrderDetails)
 class OrderDetailsAdmin(admin.ModelAdmin):
-    # list_display = [
-    #     'status',
-    # ]
     pass
 
 
@@ -142,3 +140,5 @@ class OrderAdmin(admin.ModelAdmin):
     inlines = [
         OrderDetailsInline
     ]
+    
+ 
