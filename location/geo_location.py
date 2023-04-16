@@ -1,7 +1,6 @@
 import requests
 from django.conf import settings
-
-from location.models import Location
+from .models import Location
 APIKEY = settings.YANDEX_API_KEY
 
 

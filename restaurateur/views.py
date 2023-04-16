@@ -12,6 +12,9 @@ from django.contrib.auth import views as auth_views
 from star_burger.settings import YANDEX_API_KEY
 
 from foodcartapp.models import Product, Restaurant, Order, OrderDetails, RestaurantMenuItem, ProductQuerySet
+from location.geo_location import (
+    get_or_create_locations, generate_human_readable_distance
+)
 
 
 class Login(forms.Form):
@@ -98,8 +101,24 @@ def view_restaurants(request):
 @user_passes_test(is_manager, login_url='restaurateur:login')
 def view_orders(request):
 
-    context = []
     orders = Order.objects.count_price().filter(status='unprocessed')
+    order_addresses = [order.address for order in orders]
+
+    print('what in order_addresses', order_addresses)
+
+    restaurant_addresses = [
+        restaurant.address for restaurant in Restaurant.objects.all()
+    ]
+
+    locations = get_or_create_locations(
+        *order_addresses, *restaurant_addresses
+    )
+    print('what in restaurant_addresses', restaurant_addresses)
+    print('what in get_or_create_locations', get_or_create_locations)
+    print('what in locations', locations)
+
+    context = []
+
     restaurant_menu_items = RestaurantMenuItem.objects.select_related(
         'restaurant', 'product'
     )
