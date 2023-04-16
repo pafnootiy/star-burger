@@ -166,9 +166,9 @@ class Order(models.Model):
     restaurant = models.ForeignKey(Restaurant,on_delete=models.CASCADE,related_name='restaurants',verbose_name='Ресторан',null=True,blank=True)
 
     payment = models.CharField('Cпособ оплаты', max_length=20,
-                               default=CASH, choices=PAYMENT)   
+                               default=CASH, choices=PAYMENT)  # допилить выбор статуса и отображение только необработанных
     status = models.CharField('Статус', max_length=20,
-                              default=UNPROCESSED, choices=STATUS)   
+                              default=UNPROCESSED, choices=STATUS)  # допилить выбор статуса и отображение только необработанных
 
     firstname = models.CharField('Имя', max_length=50)
     lastname = models.CharField('Фамилия', max_length=50, blank=True)
@@ -221,6 +221,3 @@ class OrderDetails(models.Model):
 
     def __str__(self) -> str:
         return f"{self.order} "
-    
-
-    

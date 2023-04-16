@@ -9,7 +9,7 @@ from django.http import HttpResponse
 from collections import Counter
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import views as auth_views
-
+from star_burger.settings import YANDEX_API_KEY
 
 from foodcartapp.models import Product, Restaurant, Order, OrderDetails, RestaurantMenuItem, ProductQuerySet
 
@@ -95,45 +95,37 @@ def view_restaurants(request):
     })
 
 
-def get_avalible_restaurants_with(order_details):
-    avalible_restaurants = []
-
-    items = RestaurantMenuItem.objects.prefetch_related('restaurant').filter(
-        availability=True)
-    for element in order_details:
-        for item in items:
-            if item.product == element.product:
-                avalible_restaurants.append(item.restaurant)
-
-    return list(set(avalible_restaurants))
-
-
 @user_passes_test(is_manager, login_url='restaurateur:login')
 def view_orders(request):
 
     context = []
-    order_details = OrderDetails.objects.all()
     orders = Order.objects.count_price().filter(status='unprocessed')
-
+    restaurant_menu_items = RestaurantMenuItem.objects.select_related(
+        'restaurant', 'product'
+    )
     for order in orders:
-        if order.status != 'DONE':
-            personal_order = OrderDetails.objects.filter(
-                order=order).prefetch_related('product').prefetch_related('order')
-            avalible_restaurants = get_avalible_restaurants_with(
-                personal_order)
+        order_restaurants = []
+        for order_product in order.orders.all():
 
-            context.append({
-                'id': order.id,
-                'status': order.get_status_display(),
-                'amount': order.amount,
-                'payment': order.get_payment_display(),
-                'firstname': order.firstname,
-                'lastname': order.lastname,
-                'phonenumber': order.phonenumber,
-                'address': order.address,
-                'comment': order.comment,
-                'restaurants': avalible_restaurants,
-            })
+            product_restaurants = set(menu_item.restaurant for menu_item in restaurant_menu_items
+                                      if order_product.product == menu_item.product
+                                      and menu_item.availability)
+
+            order_restaurants.append(product_restaurants)
+        suitable_restaurants = set.intersection(*order_restaurants)
+
+        context.append({
+            'id': order.id,
+            'status': order.get_status_display(),
+            'amount': order.amount,
+            'payment': order.get_payment_display(),
+            'firstname': order.firstname,
+            'lastname': order.lastname,
+            'phonenumber': order.phonenumber,
+            'address': order.address,
+            'comment': order.comment,
+            'restaurants': suitable_restaurants,
+        })
 
     return render(request, template_name='order_items.html', context={
         'order_items': context})
