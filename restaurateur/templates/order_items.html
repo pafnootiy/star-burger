@@ -39,19 +39,25 @@
       </td>
       <td>{{item.comment}}</td>
 
-      <td><details>
-        <summary>Может быть приготовлен ресторанами:</summary>
-  
-        {% for restaurant in item.restaurants %}
-           {{restaurant }}
-        {% endfor %}
-      </details></td>
+      <td>
+        <details>
+          <summary>Развернуть</summary>
+          {% if not item.restaurants %}
+            <li>Ни один ресторан не может приготовить заказ полностью.</li>
+          {% else %}
+            {% for restaurant in item.restaurants %}
+          <li>{{restaurant}} - {{item.distance}} км</li>
+          {% endfor %}
 
+          {% endif %}
+        </details>
+      </td>
+      <td>
     </tr>
 
 
     {% endfor %}
- 
+
 
   </table>
 </div>

@@ -6,7 +6,7 @@ class Location(models.Model):
     lat = models.FloatField('Широта', null=True, blank=True)
     lon = models.FloatField('Долгота', null=True, blank=True)
     updated_at = models.DateTimeField(
-        'Дата запроса к Геокодеру',
+        'Дата запроса к геокодеру',
         auto_now=True,
     )
 

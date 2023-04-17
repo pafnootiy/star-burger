@@ -1,3 +1,4 @@
+import operator
 from django import forms
 from django.shortcuts import redirect, render
 from django.views import View
@@ -10,11 +11,9 @@ from collections import Counter
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import views as auth_views
 from star_burger.settings import YANDEX_API_KEY
-
-from foodcartapp.models import Product, Restaurant, Order, OrderDetails, RestaurantMenuItem, ProductQuerySet
-from location.geo_location import (
-    get_or_create_locations, generate_human_readable_distance
-)
+from geopy.distance import distance
+from foodcartapp.models import Product, Restaurant, Order, RestaurantMenuItem
+from location.geo_location import get_or_create_locations
 
 
 class Login(forms.Form):
@@ -101,37 +100,35 @@ def view_restaurants(request):
 @user_passes_test(is_manager, login_url='restaurateur:login')
 def view_orders(request):
 
+    context = []
     orders = Order.objects.count_price().filter(status='unprocessed')
     order_addresses = [order.address for order in orders]
-
-    print('what in order_addresses', order_addresses)
-
     restaurant_addresses = [
         restaurant.address for restaurant in Restaurant.objects.all()
     ]
-
     locations = get_or_create_locations(
         *order_addresses, *restaurant_addresses
     )
-    print('what in restaurant_addresses', restaurant_addresses)
-    print('what in get_or_create_locations', get_or_create_locations)
-    print('what in locations', locations)
-
-    context = []
-
     restaurant_menu_items = RestaurantMenuItem.objects.select_related(
         'restaurant', 'product'
     )
     for order in orders:
         order_restaurants = []
         for order_product in order.orders.all():
-
             product_restaurants = set(menu_item.restaurant for menu_item in restaurant_menu_items
                                       if order_product.product == menu_item.product
                                       and menu_item.availability)
-
             order_restaurants.append(product_restaurants)
         suitable_restaurants = set.intersection(*order_restaurants)
+
+        order_location = locations.get(order.address, None)
+        for restaurant in suitable_restaurants:
+            restaurant_location = locations.get(restaurant.address, None)
+            restaurant_distance = round(distance(
+                order_location, restaurant_location).km, 2)
+
+        sorted_suitable_restaurants = sorted(
+            suitable_restaurants, key=lambda restaurant: restaurant_distance)
 
         context.append({
             'id': order.id,
@@ -143,7 +140,8 @@ def view_orders(request):
             'phonenumber': order.phonenumber,
             'address': order.address,
             'comment': order.comment,
-            'restaurants': suitable_restaurants,
+            'restaurants': sorted_suitable_restaurants,
+            'distance': restaurant_distance,
         })
 
     return render(request, template_name='order_items.html', context={

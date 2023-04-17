@@ -20,18 +20,9 @@ def fetch_coordinates(address, apikey=APIKEY):
     return lon, lat
 
 
-def generate_human_readable_distance(distance):
-    distance_with_units = f"{int(distance)} км"
-    if distance < 10:
-        distance_with_units = f"{distance:.2f} км"
-    if distance < 1:
-        distance_with_units = f"{int(distance*1000)} м"
-    return distance_with_units
-
-
 def get_or_create_locations(*addresses):
     existed_locations = {
-        location.address: (location.lon, location.lat)
+        location.address: (location.lat, location.lon)
         for location in Location.objects.filter(address__in=addresses)
     }
     for address in addresses:
@@ -42,7 +33,7 @@ def get_or_create_locations(*addresses):
             continue
         lon, lat = coordinates
         location = Location.objects.create(
-            address=address, lon=lon, lat=lat
+            address=address, lon=lon, lat=lon
         )
-        existed_locations[location.address] = (location.lon, location.lat)
+        existed_locations[location.address] = (location.lat, location.lon)
     return existed_locations
