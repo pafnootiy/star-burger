@@ -112,4 +112,4 @@ def register_order(request):
 
     except TypeError:
         raise
-    return Response(request.data)  # привильно ли отправляется сериализация
+    return Response(request.data)  

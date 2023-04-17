@@ -10,5 +10,9 @@ class Location(models.Model):
         auto_now=True,
     )
 
+    class Meta:
+        verbose_name = 'Локация'
+        verbose_name_plural = 'Локации'
+
     def __str__(self):
         return f'{self.address} ({self.lat}, {self.lon})'

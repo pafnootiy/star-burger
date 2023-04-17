@@ -187,7 +187,6 @@ class Order(models.Model):
         return f"{self.firstname} {self.lastname} , {self.address}"
 
 
-# допилисть сериализатор который будет запрещать менять стоимость в форме
 def validate_even(value):
     if value != value:
         value.clean()

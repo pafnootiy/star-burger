@@ -14,7 +14,6 @@ from .models import OrderDetails
 
 class RestaurantMenuItemInline(admin.TabularInline):
     model = RestaurantMenuItem
-    # model = OrderDetails
     extra = 0
 
 
