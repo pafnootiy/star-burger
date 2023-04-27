@@ -21,12 +21,12 @@ def fetch_coordinates(address, apikey=APIKEY):
 
 
 def get_or_create_locations(*addresses):
-    existed_locations = {
+    existing_locations = {
         location.address: (location.lat, location.lon)
         for location in Location.objects.filter(address__in=addresses)
     }
     for address in addresses:
-        if address in existed_locations.keys():
+        if address in existing_locations.keys():
             continue
         coordinates = fetch_coordinates(address)
         if not coordinates:
@@ -35,5 +35,5 @@ def get_or_create_locations(*addresses):
         location = Location.objects.create(
             address=address, lon=lon, lat=lon
         )
-        existed_locations[location.address] = (location.lat, location.lon)
-    return existed_locations
+        existing_locations[location.address] = (location.lat, location.lon)
+    return existing_locations
