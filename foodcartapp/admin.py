@@ -124,7 +124,7 @@ class OrderAdmin(admin.ModelAdmin):
     def response_change(self, request, obj):
         res = super(OrderAdmin, self).response_change(request, obj)
         if "next" in request.GET:
-            return HttpResponseRedirect(request.GET['next'])      # допилить с url_has_allowed_host_and_scheme
+            return HttpResponseRedirect(request.GET['next'])
         else:
             return res
 
@@ -133,11 +133,9 @@ class OrderAdmin(admin.ModelAdmin):
         'lastname',
         'phonenumber',
         'address',
- 
+
     ]
- 
+
     inlines = [
         OrderDetailsInline
     ]
-    
- 
