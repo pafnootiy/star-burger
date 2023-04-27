@@ -1,18 +1,17 @@
-import json
+# import json
 from django.http import JsonResponse
 from django.templatetags.static import static
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework import status
-from django.db import IntegrityError, transaction
-from rest_framework.serializers import ValidationError
-from rest_framework.serializers import Serializer
-from rest_framework.serializers import CharField
+# from rest_framework import status
+from django.db import transaction
+# from rest_framework.serializers import ValidationError
+# from rest_framework.serializers import Serializer
+# from rest_framework.serializers import CharField
 from rest_framework.serializers import ModelSerializer
-from rest_framework.serializers import ListField
-# foodcartapp
+# from rest_framework.serializers import ListField
+
 from foodcartapp.models import Product, Order, OrderDetails
-from .models import Product, Order, OrderDetails
 
 
 def banners_list_api(request):
@@ -62,7 +61,6 @@ def product_list_api(request):
         }
         dumped_products.append(dumped_product)
 
-    # print(dumped_products)
     return JsonResponse(dumped_products, safe=False, json_dumps_params={
         'ensure_ascii': False,
         'indent': 4,

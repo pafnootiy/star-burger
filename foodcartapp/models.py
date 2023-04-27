@@ -2,7 +2,7 @@ from django.db import models
 from django.core.validators import MinValueValidator
 from phonenumber_field.modelfields import PhoneNumberField
 from django.db.models import Sum, F
-from django.core.exceptions import ValidationError
+# from django.core.exceptions import ValidationError
 from django.utils import timezone
 
 
