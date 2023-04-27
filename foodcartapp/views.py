@@ -1,16 +1,10 @@
-# import json
+
 from django.http import JsonResponse
 from django.templatetags.static import static
+from django.db import transaction
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-# from rest_framework import status
-from django.db import transaction
-# from rest_framework.serializers import ValidationError
-# from rest_framework.serializers import Serializer
-# from rest_framework.serializers import CharField
 from rest_framework.serializers import ModelSerializer
-# from rest_framework.serializers import ListField
-
 from foodcartapp.models import Product, Order, OrderDetails
 
 

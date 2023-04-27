@@ -1,16 +1,10 @@
-# import operator
 from django import forms
 from django.shortcuts import redirect, render
 from django.views import View
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import user_passes_test
-# from django.urls import reverse
-# from pprint import pprint
-# from django.http import HttpResponse
-# from collections import Counter
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import views as auth_views
-from star_burger.settings import YANDEX_API_KEY
 from geopy.distance import distance
 from foodcartapp.models import Product, Restaurant, Order, RestaurantMenuItem
 from location.geo_location import get_or_create_locations
