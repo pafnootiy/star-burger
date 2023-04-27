@@ -10,4 +10,3 @@ urlpatterns = [
     path('banners/', banners_list_api),
     path('order/', register_order),
 ]
- 
