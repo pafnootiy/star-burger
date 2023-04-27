@@ -112,4 +112,4 @@ def register_order(request):
 
     except TypeError:
         raise
-    return Response(request.data)  
+    return Response(request.data)

@@ -187,11 +187,6 @@ class Order(models.Model):
         return f"{self.firstname} {self.lastname} , {self.address}"
 
 
-def validate_even(value):
-    if value != value:
-        value.clean()
-
-
 class OrderDetails(models.Model):
 
     order = models.ForeignKey(
@@ -211,7 +206,7 @@ class OrderDetails(models.Model):
         verbose_name='цена товара',
         max_digits=8,
         decimal_places=2,
-        validators=[MinValueValidator(0), validate_even]
+        validators=[MinValueValidator(0)]
     )
 
     class Meta:
