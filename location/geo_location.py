@@ -1,6 +1,6 @@
 import requests
 from django.conf import settings
-from .models import Location
+from location.models import Location
 APIKEY = settings.YANDEX_API_KEY
 
 
@@ -25,12 +25,16 @@ def get_or_create_locations(*addresses):
         location.address: (location.lat, location.lon)
         for location in Location.objects.filter(address__in=addresses)
     }
+
     for address in addresses:
         if address in existing_locations.keys():
             continue
-        coordinates = fetch_coordinates(address)
-        if not coordinates:
+        try:
+            coordinates = fetch_coordinates(address)
+        except TypeError:
             continue
+        
+        coordinates = None, None
         lon, lat = coordinates
         location = Location.objects.create(
             address=address, lon=lon, lat=lon

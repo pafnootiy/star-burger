@@ -4,8 +4,8 @@ from django.templatetags.static import static
 from django.db import transaction
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework.serializers import ModelSerializer
 from foodcartapp.models import Product, Order, OrderDetails
+from .serializers import OrderSerializer
 
 
 def banners_list_api(request):
@@ -59,22 +59,6 @@ def product_list_api(request):
         'ensure_ascii': False,
         'indent': 4,
     })
-
-
-class OrderDetailsSerializer(ModelSerializer):
-    class Meta:
-        model = OrderDetails
-        fields = ['product', 'quantity']
-
-
-class OrderSerializer(ModelSerializer):
-    products = OrderDetailsSerializer(
-        many=True, allow_empty=False, write_only=True)
-
-    class Meta:
-        model = Order
-        fields = ['products', 'firstname', 'lastname',
-                  'phonenumber', 'address']
 
 
 @transaction.atomic
