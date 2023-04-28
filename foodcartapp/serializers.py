@@ -16,3 +16,6 @@ class OrderSerializer(ModelSerializer):
         model = Order
         fields = ['products', 'firstname', 'lastname',
                   'phonenumber', 'address']
+
+    def create(self, validated_data):
+        return super().create(**validated_data)
