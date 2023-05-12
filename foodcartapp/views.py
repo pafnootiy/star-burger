@@ -8,6 +8,7 @@ from foodcartapp.models import Product, Order, OrderDetails
 from .serializers import OrderSerializer
 
 
+
 def banners_list_api(request):
     # FIXME move data to db?
     return JsonResponse([
@@ -70,13 +71,4 @@ def register_order(request):
     serializer.is_valid(raise_exception=True)
     serializer.save()
 
-    for item in request.data['products']:
-        product = Product.objects.get(id=item['product'])
-        OrderDetails.objects.create(
-            order=serializer.data,
-            product=product,
-            quantity=item['quantity'],
-            product_price=product.price
-        )
-
-    return Response(request.data)
+    return Response(serializer.data)

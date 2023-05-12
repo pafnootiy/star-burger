@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import admin
 from django.shortcuts import reverse, redirect
 from django.templatetags.static import static
@@ -115,12 +116,13 @@ class OrderDetailsAdmin(admin.ModelAdmin):
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     def response_change(self, request, obj):
-        res = super().response_post_save_change(request, obj)
-        if "next" in request.GET:
-            if url_has_allowed_host_and_scheme(request.GET['next'], None):
-                return redirect(request.GET['next'])
-            else:
-                return res
+        super().response_change(request, obj)
+        if 'next' not in request.GET:
+            return super().response_post_save_change(request, obj)
+        if url_has_allowed_host_and_scheme(
+            request.GET['next'], settings.ALLOWED_HOSTS
+        ):
+            return redirect(request.GET['next'])
 
     list_display = [
         'firstname',
