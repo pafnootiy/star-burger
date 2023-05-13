@@ -117,12 +117,13 @@ class OrderDetailsAdmin(admin.ModelAdmin):
 class OrderAdmin(admin.ModelAdmin):
     def response_change(self, request, obj):
         super().response_change(request, obj)
-        if 'next' not in request.GET:
+        if 'next' in request.GET:
+            if url_has_allowed_host_and_scheme(request.GET['next'], settings.ALLOWED_HOSTS):
+                return redirect(request.GET['next'])
+            else:
+                pass
+        else:
             return super().response_post_save_change(request, obj)
-        if url_has_allowed_host_and_scheme(
-            request.GET['next'], settings.ALLOWED_HOSTS
-        ):
-            return redirect(request.GET['next'])
 
     list_display = [
         'firstname',
