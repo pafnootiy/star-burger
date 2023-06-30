@@ -1,0 +1,17 @@
+[0;1;31m×[0m star-burger.service - Star Burger Service
+     Loaded: loaded (/etc/systemd/system/star-burger.service; disabled; vendor preset: enabled)
+     Active: [0;1;31mfailed[0m (Result: exit-code) since Wed 2023-06-28 11:56:41 UTC; 19min ago
+    Process: 11365 ExecStart=/opt/star-burger/venv/bin/gunicorn --bind 81.163.27.186:80 star_burger:app [0;1;31m(code=exited, status=1/FAILURE)[0m
+   Main PID: 11365 (code=exited, status=1/FAILURE)
+        CPU: 333ms
+
+Jun 28 11:56:38 devman gunicorn[11365]: [2023-06-28 11:56:38 +0000] [11365] [ERROR] Connection in use: ('81.163.27.186', 80)
+Jun 28 11:56:38 devman gunicorn[11365]: [2023-06-28 11:56:38 +0000] [11365] [ERROR] Retrying in 1 second.
+Jun 28 11:56:39 devman gunicorn[11365]: [2023-06-28 11:56:39 +0000] [11365] [ERROR] Connection in use: ('81.163.27.186', 80)
+Jun 28 11:56:39 devman gunicorn[11365]: [2023-06-28 11:56:39 +0000] [11365] [ERROR] Retrying in 1 second.
+Jun 28 11:56:40 devman gunicorn[11365]: [2023-06-28 11:56:40 +0000] [11365] [ERROR] Connection in use: ('81.163.27.186', 80)
+Jun 28 11:56:40 devman gunicorn[11365]: [2023-06-28 11:56:40 +0000] [11365] [ERROR] Retrying in 1 second.
+Jun 28 11:56:41 devman gunicorn[11365]: [2023-06-28 11:56:41 +0000] [11365] [ERROR] Can't connect to ('81.163.27.186', 80)
+Jun 28 11:56:41 devman systemd[1]: [0;1;39m[0;1;31m[0;1;39mstar-burger.service: Main process exited, code=exited, status=1/FAILURE[0m
+Jun 28 11:56:41 devman systemd[1]: [0;1;38;5;185m[0;1;39m[0;1;38;5;185mstar-burger.service: Failed with result 'exit-code'.[0m
+Jun 28 11:56:41 devman systemd[1]: Stopped Star Burger Service.

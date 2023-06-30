@@ -140,3 +140,7 @@ def view_orders(request):
 
     return render(request, template_name='order_items.html', context={
         'order_items': context})
+
+
+test = 1/0
+rint("test)

@@ -1,7 +1,8 @@
 import os
 import dj_database_url
-
+import rollbar
 from environs import Env
+from rollbar.contrib.django.middleware import RollbarNotifierMiddlewareExcluding404
 
 
 env = Env()
@@ -10,12 +11,16 @@ env.read_env()
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+ 
 
 SECRET_KEY = env('SECRET_KEY')
 YANDEX_API_KEY = env('YANDEX_API_KEY')
 DEBUG = env.bool('DEBUG', False)
+ROLLBAR_TOKEN = env('ROLLBAR_TOKEN')
+ROLLBAR_ENVIRONMENT = env('ROLLBAR_ENVIRONMENT')
 
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', ['127.0.0.1', 'localhost'])
+
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', ['127.0.0.1', 'localhost','81.163.27.186'])
 
 INSTALLED_APPS = [
     'foodcartapp.apps.FoodcartappConfig',
@@ -29,6 +34,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'debug_toolbar',
     'rest_framework',
+    'rollbar.contrib.django',
+
 ]
 
 MIDDLEWARE = [
@@ -40,7 +47,24 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'rollbar.contrib.django.middleware.RollbarNotifierMiddleware',
+    'rollbar.contrib.django.middleware.RollbarNotifierMiddlewareExcluding404',
+
 ]
+
+
+ 
+
+ROLLBAR = {
+    'access_token': ROLLBAR_TOKEN,
+    'environment':  ROLLBAR_ENVIRONMENT,
+    'code_version': '1.0',
+    'root': BASE_DIR,
+}
+
+rollbar.init(**ROLLBAR)
+
+
 
 ROOT_URLCONF = 'star_burger.urls'
 
