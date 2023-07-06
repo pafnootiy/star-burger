@@ -9,14 +9,6 @@ git pull origin master
 echo "Installing Python libraries..."
 pip install -r requirements.txt
 
-# Установка библиотек Node.js
-echo "Installing Node.js libraries..."
-cd /opt/star-burger
-npm install
-
-# Пересборка JS-кода
-echo "Building JavaScript code..."
-npm run build
 
 # Пересборка статики Django
 echo "Collecting Django static files..."
