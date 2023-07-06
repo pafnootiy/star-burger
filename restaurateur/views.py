@@ -142,5 +142,3 @@ def view_orders(request):
         'order_items': context})
 
 
-test = 1/0
-rint("test)

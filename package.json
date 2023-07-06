@@ -12,5 +12,9 @@
   },
   "devDependencies": {
     "@babel/core": "^7.17.8"
-  }
+  },
+
+"scripts": {
+  "build": "parcel build src/index.html"
+},
 }
