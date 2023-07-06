@@ -3,7 +3,7 @@ import dj_database_url
 import rollbar
 from environs import Env
 from rollbar.contrib.django.middleware import RollbarNotifierMiddlewareExcluding404
-
+import dj_database_url
 
 env = Env()
 env.read_env()
@@ -18,7 +18,7 @@ YANDEX_API_KEY = env('YANDEX_API_KEY')
 DEBUG = env.bool('DEBUG', False)
 ROLLBAR_TOKEN = env('ROLLBAR_TOKEN')
 ROLLBAR_ENVIRONMENT = env('ROLLBAR_ENVIRONMENT')
-
+DB_URL = env('DATABASE_URL')
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', ['127.0.0.1', 'localhost','81.163.27.186','81.163.27.186.nip.io'])
 
@@ -111,16 +111,8 @@ MEDIA_URL = '/media/'
 
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'burger_data',
-        'USER': 'postgres',
-        'PASSWORD': 'qwerty',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
+    'default': dj_database_url.config(default=DB_URL)
 }
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
