@@ -38,6 +38,12 @@ python manage.py collectstatic --noinput
 # Уведомление об успешном завершении деплоя
 echo "Deployment completed successfully."
 
+# Перезагрузка Nginx
+echo "Reloading Nginx..."
+sudo systemctl reload nginx
+
+
+
 # В случае ошибки, завершение выполнения скрипта
 set -e
 # Отправка сообщения в Rollbar
