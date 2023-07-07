@@ -61,6 +61,7 @@ pip install -r requirements.txt
   * `SECRET_KEY`
   * `YANDEX_API_KEY`
   * `DATABASE_URL`
+  * `ROLLBAR_ENVIRONMENT`
   
   
 Создать файл `.env` в каталоге `star_burger/` и положите туда такой код:
@@ -68,6 +69,7 @@ pip install -r requirements.txt
 SECRET_KEY=django-insecure-0if40nf4nf93n4
 YANDEX_API_KEY=django-insecure-0if40nf4nf93n4
 DATABASE_URL=postgres://postgres:qwerty@localhost:5432/burger_data
+ROLLBAR_ENVIRONMENT=development
 
 ```
 Для подключения Rollbar, запустите   команду
