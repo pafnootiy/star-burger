@@ -52,16 +52,17 @@ MIDDLEWARE = [
 ]
 
 
- 
+ROLLBAR_ENABLED =  env('ROLLBAR_TOKEN', 'False')
 
-ROLLBAR = {
-    'access_token': env('ROLLBAR_TOKEN', 'DEFAULT_TOKEN'),
-    'environment':  ROLLBAR_ENVIRONMENT,
-    'code_version': '1.0',
-    'root': BASE_DIR,
-}
+if ROLLBAR_ENABLED:
+    ROLLBAR = {
+        'access_token': ROLLBAR_ENABLED,
+        'environment':  ROLLBAR_ENVIRONMENT,
+        'code_version': '1.0',
+        'root': BASE_DIR,
+    }
 
-rollbar.init(**ROLLBAR)
+    rollbar.init(**ROLLBAR)
 
 
 
