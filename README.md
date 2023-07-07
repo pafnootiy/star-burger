@@ -57,10 +57,25 @@ python -m venv venv
 pip install -r requirements.txt
 ```
 
-Определите переменную окружения `SECRET_KEY`. Создать файл `.env` в каталоге `star_burger/` и положите туда такой код:
+Определите переменные окружения:
+  * `SECRET_KEY`
+  * `YANDEX_API_KEY`
+  * `DATABASE_URL`
+  
+  
+Создать файл `.env` в каталоге `star_burger/` и положите туда такой код:
 ```sh
 SECRET_KEY=django-insecure-0if40nf4nf93n4
+YANDEX_API_KEY=django-insecure-0if40nf4nf93n4
+DATABASE_URL=postgres://postgres:qwerty@localhost:5432/burger_data
+
 ```
+Для подключения Rollbar, запустите   команду
+` export ROLLBAR_TOKEN=your_rollbar_token ` 
+в командной строке перед запуском скрипта деплоя, значение переменной окружения будет установлено на время текущей сессии командной строки: 
+
+` export ROLLBAR_TOKEN=5b7229b652d1436dbd5c49a1ec3e59a8 ` 
+
 
 Создайте файл базы данных SQLite и отмигрируйте её следующей командой:
 
