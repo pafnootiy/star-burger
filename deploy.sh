@@ -28,7 +28,6 @@ pip install -r requirements.txt --assume-yes
 
 # Накат миграций
 echo "Applying database migrations..."
-python manage.py makemigrations  # Создание новых миграций
 python manage.py migrate --noinput  # Применение миграций без интерактивного ввода
 
 # Пересборка статики Django
