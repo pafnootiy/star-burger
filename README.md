@@ -167,6 +167,77 @@ Parcel будет следить за файлами в каталоге `bundle
 - `SECRET_KEY` — секретный ключ проекта. Он отвечает за шифрование на сайте. Например, им зашифрованы все пароли на вашем сайте.
 - `ALLOWED_HOSTS` — [см. документацию Django](https://docs.djangoproject.com/en/3.1/ref/settings/#allowed-hosts)
 
+## Запуска проекта с помощью Docker на локальной машине
+
+Установите Docker на вашу локальную машину. Вы можете загрузить Docker для вашей операционной системы с официального сайта Docker: Загрузка [Docker](https://www.docker.com/get-started)
+
+
+Убедитесь, что Docker установлен и правильно настроен. Вы можете проверить версию Docker, выполнив команду:
+
+`docker --version`
+
+Клонируйте репозиторий с кодом проекта "Star Burger" на вашу локальную машину:
+
+`git clone https://github.com/devmanorg/star-burger.git
+ cd star-burger `
+
+Создайте файл .env в каталоге star_burger/ и укажите следующие переменные окружения для настройки проекта:
+
+`SECRET_KEY=django-insecure-0if40nf4nf93n4
+ YANDEX_API_KEY=django-insecure-0if40nf4nf93n4
+ DATABASE_URL=postgres://postgres:qwerty@db:5432/burger_data
+ ROLLBAR_ENVIRONMENT=development
+ `
+ 
+Запустите проект с помощью Docker Compose:
+
+`docker-compose up -d `
+
+Откройте сайт в браузере по адресу (http://127.0.0.1:8000/) . Вы должны увидеть домашнюю страницу сайта "Star Burger".
+
+
+## Деплой проекта "Star Burger" на сервер с помощью Docker
+
+Установите Docker на вашу локальную машину. Вы можете загрузить Docker для вашей операционной системы с официального сайта Docker: Загрузка [Docker](https://www.docker.com/get-started)
+
+
+Убедитесь, что Docker установлен и правильно настроен. Вы можете проверить версию Docker, выполнив команду:
+
+`docker --version`
+
+
+Подготовьте ваш сервер для деплоя проекта. Убедитесь, что у вас установлены следующие компоненты:
+
+* Docker
+* Docker Compose (обычно устанавливается вместе с Docker)
+
+
+Загрузите код проекта "Star Burger" на ваш сервер. Вы можете сделать это, склонировав репозиторий или загрузив архив с кодом.
+
+
+Создайте файл .env в каталоге star_burger/ и укажите следующие переменные окружения для настройки проекта:
+
+`SECRET_KEY=django-insecure-0if40nf4nf93n4
+ YANDEX_API_KEY=django-insecure-0if40nf4nf93n4
+ DATABASE_URL=postgres://postgres:qwerty@db:5432/burger_data
+ ROLLBAR_ENVIRONMENT=development
+ `
+
+Запустите проект с помощью Docker Compose:
+
+`docker-compose up -d `
+
+Убедитесь, что все контейнеры успешно запустились. Вы можете проверить статус запущенных контейнеров с помощью команды:
+
+`docker-compose ps `
+
+
+Убедитесь, что ваши порты на сервере открыты и настроены правильно, чтобы внешние пользователи могли получить доступ к вашему сайту.
+
+
+Откройте сайт в браузере по [адресу](https://81.163.27.186.nip.io/)  сервера. Если всё настроено правильно, вы должны увидеть домашнюю страницу сайта "Star Burger".
+
+
 ## Цели проекта
 
 Код написан в учебных целях — это урок в курсе по Python и веб-разработке на сайте [Devman](https://dvmn.org). За основу был взят код проекта [FoodCart](https://github.com/Saibharath79/FoodCart).
