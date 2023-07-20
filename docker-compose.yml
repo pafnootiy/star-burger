@@ -1,0 +1,17 @@
+version: "3"
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/code
+    ports:
+      - "8081:8080"
+    depends_on:
+      - db
+    environment:
+      - ROLLBAR_TOKEN=${ROLLBAR_TOKEN}
+      - DATABASE_URL=${DATABASE_URL}
+  db:
+    image: postgres:13

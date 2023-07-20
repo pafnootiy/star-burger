@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Загрузка переменных окружения из файла .env (если он существует)
+if [ -f .env ]; then
+  source .env
+fi
+
 # Функция для отправки сообщения в Rollbar
 send_to_rollbar() {
   local ACCESS_TOKEN="$ROLLBAR_TOKEN"
@@ -19,7 +24,7 @@ fi
 
 # Обновление кода репозитория
 echo "Updating repository code..."
-cd /opt/star-burger
+cd /opt/star-burger  # Изменен путь к вашему проекту
 git pull origin master
 
 # Установка библиотек Python
@@ -34,14 +39,13 @@ python manage.py migrate --noinput  # Применение миграций без интерактивного вво
 echo "Collecting Django static files..."
 python manage.py collectstatic --noinput
 
+# Сборка и запуск контейнеров с помощью Docker Compose
+echo "Building and starting containers with Docker Compose..."
+docker-compose pull
+docker-compose up -d
+
 # Уведомление об успешном завершении деплоя
 echo "Deployment completed successfully."
-
-# Перезагрузка Nginx
-echo "Reloading Nginx..."
-sudo systemctl reload nginx
-
-
 
 # В случае ошибки, завершение выполнения скрипта
 set -e
