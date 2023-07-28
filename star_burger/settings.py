@@ -107,12 +107,14 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
  
-
-
-
 DATABASES = {
     'default': dj_database_url.config(default=DB_URL)
 }
+
+
+
+
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',

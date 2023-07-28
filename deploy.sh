@@ -24,7 +24,7 @@ fi
 
 # Обновление кода репозитория
 echo "Updating repository code..."
-cd /opt/star-burger  # Изменен путь к вашему проекту
+cd /opt/star-burger   
 git pull origin master
 
 # Установка библиотек Python

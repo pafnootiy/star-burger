@@ -3,7 +3,7 @@ services:
   web:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.backend
     volumes:
       - .:/code
     ports:
@@ -13,5 +13,19 @@ services:
     environment:
       - ROLLBAR_TOKEN=${ROLLBAR_TOKEN}
       - DATABASE_URL=${DATABASE_URL}
+
   db:
     image: postgres:13
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - "5433:5432"  
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    volumes:
+      - .:/app
+    ports:
+      - "1234:1234"

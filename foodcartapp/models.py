@@ -220,14 +220,3 @@ class OrderDetails(models.Model):
     def __str__(self) -> str:
         return f"{self.order}"
 
-
-
-
-class Test4deploymodel(models.Model):
-    firstname = models.CharField('Имя', max_length=50)
-    lastname = models.CharField('Фамилия', max_length=50, blank=True)
-    phonenumber = PhoneNumberField('Телефон', region="RU")
-    address = models.CharField('Адрес', max_length=250)
-    comment = models.TextField('Комментарий', blank=True)
-
-

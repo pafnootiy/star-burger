@@ -1,0 +1,26 @@
+# Этап сборки фронтенда
+FROM node:16.16.0 AS frontend
+
+# Установка Node.js и npm
+RUN apt-get update && apt-get install -y nodejs npm
+
+# Устанавливаем рабочую директорию для фронтенда
+WORKDIR /app
+
+# Копируем файлы зависимостей фронтенда для установки
+COPY frontend/package*.json ./
+
+# Устанавливаем зависимости для фронтенда
+RUN npm install
+
+# Копируем папку со статическими файлами
+COPY static/ ./static
+
+# Копируем файл index.html из папки templates внутрь контейнера
+COPY templates/index.html ./
+
+# Копируем остальные файлы фронтенда
+COPY frontend/ ./frontend
+
+# Собираем фронтенд и запускаем Parcel в режиме watch
+CMD ["./node_modules/.bin/parcel", "build", "./bundles-src/index.js", "--dist-dir", "./bundles", "--public-url", "./" ]
